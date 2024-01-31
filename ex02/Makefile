@@ -7,7 +7,7 @@ CC 		= c++
 CFLAGS 	= -MP -MMD -I$(SRC_DIR) -Wall -Wextra -Werror -Wpedantic -g -std=c++17
 SHELL	= /bin/sh
 
-SRCS	= main.cpp
+SRCS	= main.cpp MyInt.cpp
 
 all: $(NAME)
 

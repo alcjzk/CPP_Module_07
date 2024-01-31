@@ -16,52 +16,66 @@ class Array
             }
         }
 
-        Array() : _size(0), _buffer(nullptr) {}
+        Array() : _buffer(nullptr), _size(0) {}
 
-        Array(unsigned int n) : _size(n), _buffer(new[n] T()) {}
+        Array(unsigned int n) :_buffer(new T[n]), _size(n) {}
 
         Array(const Array& other) :
-            _size(other._size),
-            _buffer(std::memcpy(new[other._size] T(), other._buffer, other._size)) {}
+            _buffer(copy_buffer(other)),
+            _size(other._size) {}
 
         Array(Array&& other) noexcept :
-            _size(std::exchange(other._size, 0)),
-            _buffer(std::exchange(other._buffer, nullptr)) {}
+            _buffer(std::exchange(other._buffer, nullptr)),
+            _size(std::exchange(other._size, 0)) {}
 
         Array& operator=(const Array& other)
         {
+            T* buffer;
+
             if (*this == other)
             {
                 return *this;
             }
+
+            buffer = copy_buffer(other);
             if (_buffer)
             {
                 delete[] _buffer;
-                _buffer = nullptr;
             }
-            _buffer = new[other._size] T();
+
+            _buffer = buffer;
             _size = other._size;
-            std::memcpy(_buffer, other._buffer, _size);
             return *this;
         }
 
         Array& operator=(Array&& other) noexcept
         {
-            _size = std::exchange(other._size, _size);
             _buffer = std::exchange(other._buffer, _buffer);
+            _size = std::exchange(other._size, _size);
             return *this;
         }
 
-        T& operator[](size_t index)
+        T& operator[](size_t index) const
         {
             if (index >= _size)
             {
-                throw std::exception;
+                throw std::exception();
             }
             return _buffer[index];
         }
 
+        size_t size() { return _size; }
+
     private:
-        size_t  _size;
         T*      _buffer;
+        size_t  _size;
+
+        static T* copy_buffer(Array<T> other)
+        {
+            if (!other._buffer)
+            {
+                return nullptr;
+            }
+            return static_cast<T*>(std::memcpy(new T[other._size], other._buffer, other._size));
+        }
 };
