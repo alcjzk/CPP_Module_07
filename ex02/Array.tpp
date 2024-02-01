@@ -72,7 +72,7 @@ size_t Array<T>::size() const
 }
 
 template <typename T>
-T* Array<T>::copy_buffer(Array<T> other)
+T* Array<T>::copy_buffer(const Array<T>& other)
 {
     if (!other._buffer)
     {

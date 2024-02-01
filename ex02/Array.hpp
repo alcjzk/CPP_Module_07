@@ -22,7 +22,7 @@ class Array
         T*      _buffer;
         size_t  _size;
 
-        static T* copy_buffer(Array<T> other);
+        static T* copy_buffer(const Array<T>& other);
 };
 
 #include "Array.tpp"
