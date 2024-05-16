@@ -1,6 +1,6 @@
 #include <cstdlib>
-#include <iostream>
 #include <cassert>
+#include <iostream>
 #include "Array.hpp"
 #include "MyInt.hpp"
 
@@ -40,7 +40,6 @@ int main()
             (void)empty[0];
             assert(false);
         } catch (...) {}
-        return EXIT_SUCCESS;
     }
 
     {
@@ -68,4 +67,8 @@ int main()
         assert(array_is_deepcopy(array_copy_constructed, array));
         assert(array_is_deepcopy(array_copy_assigned, array));
     }
+
+    std::cout << "Tests ok\n";
+
+    return EXIT_SUCCESS;
 }

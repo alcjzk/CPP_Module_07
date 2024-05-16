@@ -10,20 +10,21 @@ class Array
 {
     public:
         ~Array();
-        Array();
+        Array() = default;
         Array(unsigned int n);
         Array(const Array& other);
         Array(Array&& other) noexcept;
 
-        Array&  operator=(const Array& other);
-        Array&  operator=(Array&& other) noexcept;
-        T&      operator[](size_t index) const;
+        Array&      operator=(const Array& other);
+        Array&      operator=(Array&& other) noexcept;
+        const T&    operator[](size_t index) const;
+        T&          operator[](size_t index);
 
         size_t size() const;
 
     private:
-        T*      _buffer;
-        size_t  _size;
+        T*      _buffer = nullptr;
+        size_t  _size = 0;
 
         static T* copy_buffer(const Array<T>& other);
 };
@@ -32,11 +33,6 @@ template <typename T>
 Array<T>::~Array()
 {
     delete[] _buffer;
-}
-
-template <typename T>
-Array<T>::Array() : _buffer(nullptr), _size(0)
-{
 }
 
 template <typename T>
@@ -58,13 +54,11 @@ Array<T>::Array(Array<T>&& other) noexcept :
 template <typename T>
 Array<T>& Array<T>::operator=(const Array<T>& other)
 {
-    T* buffer;
-
     if (*this == other)
     {
         return *this;
     }
-    buffer = copy_buffer(other);
+    T* buffer = copy_buffer(other);
     delete[] _buffer;
     _buffer = buffer;
     _size = other._size;
@@ -80,7 +74,17 @@ Array<T>& Array<T>::operator=(Array<T>&& other) noexcept
 }
 
 template <typename T>
-T& Array<T>::operator[](size_t index) const
+const T& Array<T>::operator[](size_t index) const
+{
+    if (index >= _size)
+    {
+        throw std::exception();
+    }
+    return _buffer[index];
+}
+
+template <typename T>
+T& Array<T>::operator[](size_t index)
 {
     if (index >= _size)
     {
@@ -102,5 +106,5 @@ T* Array<T>::copy_buffer(const Array<T>& other)
     {
         return nullptr;
     }
-    return static_cast<T*>(std::memcpy(new T[other._size], other._buffer, other._size));
+    return static_cast<T*>(std::memcpy(new T[other._size], other._buffer, other._size * sizeof(T)));
 }

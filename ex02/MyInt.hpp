@@ -5,16 +5,16 @@ class MyInt
 {
     public:
         ~MyInt() = default;
-        MyInt();
+        MyInt() = default;
         MyInt(const MyInt&) = default;
-        MyInt(MyInt&&) = default;
+        MyInt(MyInt&&) noexcept = default;
 
         MyInt& operator=(const MyInt&) = default;
-        MyInt& operator=(MyInt&&) = default;
+        MyInt& operator=(MyInt&&) noexcept = default;
 
         void    value(int value);
         int     value() const;
 
     private:
-        int _value;
+        int _value = 42;
 };
